@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "Calendario Mensual";
+    DateTime dateHoy = DateTime.Today;
+    int mesInt;
+    int anioInt;
+
+    mesInt = Convert.ToInt32(ViewData["mes"]);
+    anioInt = Convert.ToInt32(ViewData["anio"]);
+
+    DateTime date1 = new DateTime(anioInt, mesInt, 1);
+
+    string mesString = "";
+
+    switch (mesInt)
+    {
+        case 1: mesString = "Enero"; break;
+        case 2: mesString = "Febrero"; break;
+        case 3: mesString = "Marzo"; break;
+        case 4: mesString = "Abril"; break;
+        case 5: mesString = "Mayo"; break;
+        case 6: mesString = "Junio"; break;
+        case 7: mesString = "Julio"; break;
+        case 8: mesString = "Agosto"; break;
+        case 9: mesString = "Septiembre"; break;
+        case 10: mesString = "Octubre"; break;
+        case 11: mesString = "Noviembre"; break;
+        case 12: mesString = "Diciembre"; break;
+
+    }
+
+    int spacer = 5;
+    switch (date1.DayOfWeek)
+    {
+        case DayOfWeek.Monday: spacer = 1; break;
+        case DayOfWeek.Tuesday: spacer = 2; break;
+        case DayOfWeek.Wednesday: spacer = 3; break;
+        case DayOfWeek.Thursday: spacer = 4; break;
+        case DayOfWeek.Friday: spacer = 5; break;
+        case DayOfWeek.Saturday: spacer = 6; break;
+        case DayOfWeek.Sunday: spacer = 0; break;
+    }
+
+    int anioProx = 0;
+    int anioAnt = 0;
+    int mesProx = 0;
+    int mesAnt = 0;
+
+    if (mesInt > 1 & mesInt < 12)
+    {
+        anioProx = anioInt;
+        anioAnt = anioInt;
+        mesProx = mesInt + 1;
+        mesAnt = mesInt - 1;
+    }
+    else if (mesInt == 1)
+    {
+        anioProx = anioInt;
+        anioAnt = anioInt - 1;
+        mesProx = mesInt + 1;
+        mesAnt = 12;
+
+    }
+    else if (mesInt == 12)
+    {
+        anioProx = anioInt + 1;
+        anioAnt = anioInt;
+        mesProx = 1;
+        mesAnt = mesInt - 1;
+
+    }
+
+    int cantDias = 0;
+
+    if (date1.Month == 2)
+    {
+        if (anioInt % 4 == 0)
+        {
+            cantDias = 29;
+        }
+        else
+        {
+            cantDias = 28;
+        }
+    }
+    if (date1.Month == 4 || date1.Month == 6 || date1.Month == 9 || date1.Month == 11)
+    {
+        cantDias = 30;
+    }
+    if (date1.Month == 1 || date1.Month == 3 || date1.Month == 5 || date1.Month == 7 || date1.Month == 8 || date1.Month == 10 || date1.Month == 12)
+    {
+        cantDias = 31;
+    }
+
+
+}
+
+<div class="calendar">
+
+    <div class="month">
+        <ul>
+            <a href="/Home/Calendar/@anioAnt/@mesAnt">
+                <li class="prev">&#10094;</li>
+            </a>
+            <a href="/Home/Calendar/@anioProx/@mesProx">
+                <li class="next">&#10095;</li>
+            </a>
+            <li>
+                @mesString<br>
+                <span style="font-size:18px">@anioInt</span>
+            </li>
+</ul>
+    </div>
+
+    <ul class="weekdays">
+        <li>Do</li>
+        <li>Lu</li>
+        <li>Ma</li>
+        <li>Mi</li>
+        <li>Ju</li>
+        <li>Vi</li>
+        <li>Sa</li>
+    </ul>
+
+    <ul class="days">
+        @for (int i = 0; i < @spacer; i++)
+        {
+            <li></li>
+        }
+        @for (int i = 1; i < @cantDias + 1; i++)
+        {
+            DateTime dateTemp = new DateTime(anioInt, mesInt, i);
+            if (dateTemp == dateHoy)
+            {
+                <li><a href="/Home/Day/@anioInt/@mesInt/@i"><span class="active">@i</span></a></li>
+            }
+            else
+            {
+                <li><a href="/Home/Day/@anioInt/@mesInt/@i">@i</a></li>
+            }
+        }
+    </ul>
+</div>
